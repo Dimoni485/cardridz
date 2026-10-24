@@ -3,6 +3,14 @@ from app.models.catalog import CartridgeModel, PrinterModel, cartridge_model_pri
 from app.models.employee import Employee
 from app.models.invoice import Invoice, InvoiceLine, InvoiceLineSlot
 from app.models.legal_entity import Department, LegalEntity
+from app.models.part import (
+    Part,
+    PartInstallation,
+    PartRequest,
+    PartRequestLine,
+    PartUnit,
+    part_printer_model,
+)
 from app.models.printer import Printer
 from app.models.printer_repair import PrinterRepair
 from app.models.service_provider import ServiceProvider
@@ -18,10 +26,16 @@ __all__ = [
     "InvoiceLineSlot",
     "LegalEntity",
     "Operation",
+    "Part",
+    "PartInstallation",
+    "PartRequest",
+    "PartRequestLine",
+    "PartUnit",
     "Printer",
     "PrinterModel",
     "PrinterRepair",
     "ServiceProvider",
     "User",
     "cartridge_model_printer_model",
+    "part_printer_model",
 ]

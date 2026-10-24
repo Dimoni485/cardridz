@@ -33,7 +33,9 @@ def _clean_db():
     with engine.begin() as conn:
         conn.execute(
             text(
-                "TRUNCATE TABLE invoice_lines, invoices, operations, cartridges, "
+                "TRUNCATE TABLE part_installations, part_units, part_request_lines, "
+                "part_requests, part_printer_model, parts, "
+                "invoice_lines, invoices, operations, cartridges, "
                 "printer_repairs, printers, "
                 "cartridge_model_printer_model, cartridge_models, "
                 "printer_models, employees, departments, legal_entities, "

@@ -31,6 +31,15 @@ export type ServiceResult =
 
 export type PrinterRepairStatus = "in_service" | "returned";
 
+export type PartKind = "fuser" | "roller" | "drum" | "blade" | "board" | "other";
+export type PartUnitStatus = "in_stock" | "installed" | "written_off";
+export type PartRequestStatus =
+  | "draft"
+  | "submitted"
+  | "ordered"
+  | "received"
+  | "cancelled";
+
 export type InvoiceStatus = "draft" | "applied";
 export type InvoiceLineKind = "restore" | "refill" | "repair";
 
@@ -502,4 +511,80 @@ export interface ServiceReport {
   };
   outstanding: ServiceOutstandingRow[];
   printers_outstanding: PrinterOutstandingRow[];
+}
+
+export interface PartBrief {
+  id: number;
+  name: string;
+  kind: PartKind;
+  vendor: string | null;
+  article: string | null;
+}
+
+export interface Part {
+  id: number;
+  name: string;
+  kind: PartKind;
+  vendor: string | null;
+  article: string | null;
+  min_stock: number;
+  notes: string | null;
+  is_active: boolean;
+  printer_models: { id: number; vendor: string; name: string }[];
+  units_total: number;
+  units_in_stock: number;
+  units_installed: number;
+  needs_replacement: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PartUnit {
+  id: number;
+  inventory_no: string;
+  status: PartUnitStatus;
+  part: PartBrief;
+  printer: PrinterBrief | null;
+  needs_replacement: boolean;
+  purchase_price: number | null;
+  purchase_date: string | null;
+  notes: string | null;
+  installed_at: string | null;
+  created_at: string;
+}
+
+export interface PartInstallation {
+  id: number;
+  unit_id: number;
+  part: PartBrief;
+  inventory_no: string;
+  printer: PrinterBrief | null;
+  installed_at: string;
+  removed_at: string | null;
+  comment: string | null;
+  user: { id: number; username: string; full_name: string } | null;
+  needs_replacement: boolean;
+}
+
+export interface PartRequestLine {
+  id: number;
+  part: PartBrief;
+  qty: number;
+  note: string | null;
+}
+
+export interface PartRequest {
+  id: number;
+  number: string;
+  printer: PrinterBrief | null;
+  status: PartRequestStatus;
+  needed_by: string | null;
+  comment: string | null;
+  created_by: { id: number; username: string; full_name: string } | null;
+  submitted_at: string | null;
+  ordered_at: string | null;
+  received_at: string | null;
+  cancelled_at: string | null;
+  created_at: string;
+  lines: PartRequestLine[];
 }

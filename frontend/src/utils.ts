@@ -5,6 +5,9 @@ import type {
   InvoiceLineKind,
   InvoiceStatus,
   OperationType,
+  PartKind,
+  PartRequestStatus,
+  PartUnitStatus,
   PrinterStatus,
   ServiceResult,
 } from "./api/types";
@@ -66,6 +69,29 @@ export const PRINTER_STATUS_LABELS: Record<PrinterStatus, string> = {
   active: "Работает",
   repair: "В ремонте",
   retired: "Списан",
+};
+
+export const PART_KIND_LABELS: Record<PartKind, string> = {
+  fuser: "Узел закрепления",
+  roller: "Ролик",
+  drum: "Фотобарабан",
+  blade: "Ракель",
+  board: "Плата",
+  other: "Прочее",
+};
+
+export const PART_UNIT_STATUS_LABELS: Record<PartUnitStatus, string> = {
+  in_stock: "На складе",
+  installed: "Установлена",
+  written_off: "Списана",
+};
+
+export const PART_REQUEST_STATUS_LABELS: Record<PartRequestStatus, string> = {
+  draft: "Черновик",
+  submitted: "Отправлена",
+  ordered: "Заказана",
+  received: "Получена",
+  cancelled: "Отменена",
 };
 
 export const INVOICE_STATUS_LABELS: Record<InvoiceStatus, string> = {

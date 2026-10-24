@@ -18,6 +18,7 @@ interface NavGroup {
   title?: string;
   to?: string;
   end?: boolean;
+  collapsible?: boolean;
   items: NavItem[];
 }
 
@@ -32,8 +33,19 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
+    key: "parts",
+    title: "Запчасти",
+    collapsible: true,
+    items: [
+      { to: "/parts", label: "Номенклатура", icon: "⚙" },
+      { to: "/replacements", label: "Замены", icon: "⇄" },
+      { to: "/part-requests", label: "Заявки", icon: "✎" },
+    ],
+  },
+  {
     key: "refs",
     title: "Справочники",
+    collapsible: true,
     items: [
       { to: "/models", label: "Модели картриджей", icon: "◈" },
       { to: "/printer-models", label: "Модели принтеров", icon: "▦" },
@@ -62,9 +74,15 @@ export function Layout() {
   const { user, logout, canEdit, isAdmin } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
-  const [refsOpen, setRefsOpen] = useState(
-    () => window.localStorage.getItem("cardridz_nav_refs") !== "closed",
-  );
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
+    try {
+      return JSON.parse(
+        window.localStorage.getItem("cardridz_nav_groups") ?? "{}",
+      ) as Record<string, boolean>;
+    } catch {
+      return {};
+    }
+  });
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -72,13 +90,14 @@ export function Layout() {
   const [passwordDone, setPasswordDone] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  function toggleRefs() {
-    setRefsOpen((open) => {
+  function toggleGroup(key: string) {
+    setOpenGroups((current) => {
+      const next = { ...current, [key]: current[key] === false };
       window.localStorage.setItem(
-        "cardridz_nav_refs",
-        open ? "closed" : "open",
+        "cardridz_nav_groups",
+        JSON.stringify(next),
       );
-      return !open;
+      return next;
     });
   }
 
@@ -145,19 +164,21 @@ export function Layout() {
             );
             if (items.length === 0) return null;
             const collapsed =
-              group.key === "refs" ? !refsOpen : false;
+              group.collapsible && group.key
+                ? openGroups[group.key] === false
+                : false;
             return (
               <div className="nav-group" key={group.key ?? items[0].to}>
                 {group.title &&
-                  (group.key === "refs" ? (
+                  (group.collapsible && group.key ? (
                     <button
                       type="button"
                       className="nav-group-title"
-                      onClick={toggleRefs}
-                      aria-expanded={refsOpen}
+                      onClick={() => toggleGroup(group.key as string)}
+                      aria-expanded={!collapsed}
                     >
                       <span>{group.title}</span>
-                      <span className="nav-caret">{refsOpen ? "▾" : "▸"}</span>
+                      <span className="nav-caret">{collapsed ? "▸" : "▾"}</span>
                     </button>
                   ) : (
                     <div className="nav-group-title">{group.title}</div>
@@ -171,7 +192,7 @@ export function Layout() {
                       className={({ isActive }) =>
                         [
                           "nav-link",
-                          group.key ? "nav-sub" : "",
+                          group.title ? "nav-sub" : "",
                           isActive ? "active" : "",
                         ]
                           .filter(Boolean)

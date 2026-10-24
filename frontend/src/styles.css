@@ -1749,3 +1749,48 @@ a {
 .nav-group-link.active {
   color: #93c5fd;
 }
+
+.part-stock-low {
+  margin-left: 8px;
+}
+
+.part-compat {
+  max-width: 320px;
+  white-space: normal;
+}
+
+.row-attention {
+  background: #fffbeb;
+}
+
+.request-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 90px auto;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.badge-request-draft {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.badge-request-submitted {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.badge-request-ordered {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-request-received {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge-request-cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}

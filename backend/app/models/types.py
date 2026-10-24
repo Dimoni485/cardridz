@@ -7,6 +7,9 @@ from app.models.enums import (
     InvoiceLineKind,
     InvoiceStatus,
     OperationType,
+    PartKind,
+    PartRequestStatus,
+    PartUnitStatus,
     PrinterStatus,
 )
 
@@ -22,4 +25,11 @@ printer_status_enum = Enum(PrinterStatus, name="printer_status", **ENUM_KWARGS)
 invoice_status_enum = Enum(InvoiceStatus, name="invoice_status", **ENUM_KWARGS)
 invoice_line_kind_enum = Enum(
     InvoiceLineKind, name="invoice_line_kind", **ENUM_KWARGS
+)
+part_kind_enum = Enum(PartKind, name="part_kind", **ENUM_KWARGS)
+part_unit_status_enum = Enum(
+    PartUnitStatus, name="part_unit_status", **ENUM_KWARGS
+)
+part_request_status_enum = Enum(
+    PartRequestStatus, name="part_request_status", **ENUM_KWARGS
 )

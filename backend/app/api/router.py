@@ -10,6 +10,8 @@ from app.api.routes import (
     invoices,
     legal_entities,
     operations,
+    part_requests,
+    parts,
     printer_models,
     printers,
     reports,
@@ -30,6 +32,8 @@ protected_router.include_router(printers.router)
 protected_router.include_router(service_providers.router)
 protected_router.include_router(cartridges.router)
 protected_router.include_router(invoices.router)
+protected_router.include_router(parts.router)
+protected_router.include_router(part_requests.router)
 protected_router.include_router(operations.router)
 protected_router.include_router(reports.router)
 protected_router.include_router(users.router)

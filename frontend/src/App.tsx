@@ -12,6 +12,10 @@ import { InvoiceDetailPage } from "./pages/InvoiceDetailPage";
 import { InvoicesPage } from "./pages/InvoicesPage";
 import { LoginPage } from "./pages/LoginPage";
 import { ModelsPage } from "./pages/ModelsPage";
+import { PartDetailPage } from "./pages/PartDetailPage";
+import { PartReplacementsPage } from "./pages/PartReplacementsPage";
+import { PartRequestsPage } from "./pages/PartRequestsPage";
+import { PartsPage } from "./pages/PartsPage";
 import { OperationsPage } from "./pages/OperationsPage";
 import { PrinterModelsPage } from "./pages/PrinterModelsPage";
 import { PrintersPage } from "./pages/PrintersPage";
@@ -44,6 +48,10 @@ export function App() {
         <Route path="invoices" element={<InvoicesPage />} />
         <Route path="invoices/:id" element={<InvoiceDetailPage />} />
         <Route path="printers" element={<PrintersPage />} />
+        <Route path="parts" element={<PartsPage />} />
+        <Route path="parts/:id" element={<PartDetailPage />} />
+        <Route path="replacements" element={<PartReplacementsPage />} />
+        <Route path="part-requests" element={<PartRequestsPage />} />
         <Route path="models" element={<ModelsPage />} />
         <Route path="printer-models" element={<PrinterModelsPage />} />
         <Route path="employees" element={<EmployeesPage />} />

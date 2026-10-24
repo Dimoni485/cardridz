@@ -3,6 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base, TimestampMixin
 from app.models.enums import CartridgeColor, CartridgeKind
+from app.models.part import part_printer_model
 from app.models.types import cartridge_color_enum, cartridge_kind_enum
 
 cartridge_model_printer_model = Table(
@@ -32,6 +33,11 @@ class PrinterModel(Base, TimestampMixin):
     printers: Mapped[list["Printer"]] = relationship(back_populates="model")
     cartridge_models: Mapped[list["CartridgeModel"]] = relationship(
         secondary=cartridge_model_printer_model,
+        back_populates="printer_models",
+        lazy="selectin",
+    )
+    parts: Mapped[list["Part"]] = relationship(
+        secondary=part_printer_model,
         back_populates="printer_models",
         lazy="selectin",
     )

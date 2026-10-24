@@ -49,6 +49,29 @@ class PrinterRepairStatus(str, Enum):
     RETURNED = "returned"
 
 
+class PartKind(str, Enum):
+    FUSER = "fuser"
+    ROLLER = "roller"
+    DRUM = "drum"
+    BLADE = "blade"
+    BOARD = "board"
+    OTHER = "other"
+
+
+class PartUnitStatus(str, Enum):
+    IN_STOCK = "in_stock"
+    INSTALLED = "installed"
+    WRITTEN_OFF = "written_off"
+
+
+class PartRequestStatus(str, Enum):
+    DRAFT = "draft"
+    SUBMITTED = "submitted"
+    ORDERED = "ordered"
+    RECEIVED = "received"
+    CANCELLED = "cancelled"
+
+
 class InvoiceStatus(str, Enum):
     DRAFT = "draft"
     APPLIED = "applied"
