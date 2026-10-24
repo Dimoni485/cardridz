@@ -115,7 +115,7 @@ export function PartReplacementsPage() {
                       </span>
                     )}
                   </td>
-                  <td>{item.inventory_no}</td>
+                  <td className="nowrap">{item.inventory_no}</td>
                   <td>
                     {item.printer
                       ? `${item.printer.inventory_no} · ${item.printer.model.vendor} ${item.printer.model.name}`
