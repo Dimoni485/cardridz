@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { api } from "../api/client";
-import type { SummaryStats } from "../api/types";
+import type { PartInstallation, SummaryStats } from "../api/types";
 import {
   EmptyRow,
   ErrorMessage,
@@ -19,6 +19,10 @@ import {
 export function DashboardPage() {
   const { data, loading, error } = useAsyncData(
     () => api.get<SummaryStats>("/reports/summary"),
+    [],
+  );
+  const partsAttention = useAsyncData(
+    () => api.get<PartInstallation[]>("/part-installations?needs_replacement=true"),
     [],
   );
 
@@ -155,6 +159,44 @@ export function DashboardPage() {
             ))}
           </tbody>
         </table>
+      </section>
+
+      <section className="card">
+        <div className="card-header">
+          <h2>Запчасти к замене</h2>
+          <Link className="button button-small" to="/replacements?needs_replacement=true">
+            Все замены
+          </Link>
+        </div>
+        {(partsAttention.data ?? []).length === 0 ? (
+          <p className="empty-text">Нет запчастей, отмеченных «требует замены».</p>
+        ) : (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Запчасть</th>
+                <th>Принтер</th>
+                <th>Установлена</th>
+              </tr>
+            </thead>
+            <tbody>
+              {(partsAttention.data ?? []).map((item) => (
+                <tr key={item.id}>
+                  <td>
+                    <Link to={`/parts/${item.part.id}`}>{item.part.name}</Link>
+                    <span className="muted small"> · {item.inventory_no}</span>
+                  </td>
+                  <td>
+                    {item.printer
+                      ? `${item.printer.inventory_no} · ${item.printer.model.vendor} ${item.printer.model.name}`
+                      : "—"}
+                  </td>
+                  <td>{formatDateTime(item.installed_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </section>
     </div>
   );

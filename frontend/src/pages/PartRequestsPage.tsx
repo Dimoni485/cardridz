@@ -1,4 +1,5 @@
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import { useSearchParams } from "react-router-dom";
 import { api } from "../api/client";
 import type {
   Part,
@@ -14,6 +15,7 @@ import {
   Modal,
   PageHeader,
   Spinner,
+  SuccessMessage,
 } from "../components/ui";
 import { useAsyncData } from "../hooks";
 import {
@@ -56,6 +58,8 @@ export function PartRequestsPage() {
   const printers = useAsyncData(() => api.get<Printer[]>("/printers"), []);
   const parts = useAsyncData(() => api.get<Part[]>("/parts"), []);
 
+  const [searchParams] = useSearchParams();
+  const [notice, setNotice] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState<RequestForm>(EMPTY_FORM);
   const [error, setError] = useState<string | null>(null);
@@ -63,11 +67,17 @@ export function PartRequestsPage() {
   const [saving, setSaving] = useState(false);
   const [selected, setSelected] = useState<PartRequest | null>(null);
 
-  function openCreate() {
-    setForm(EMPTY_FORM);
+  function openCreate(printerId = "") {
+    setForm({ ...EMPTY_FORM, printer_id: printerId });
     setError(null);
     setShowForm(true);
   }
+
+  useEffect(() => {
+    const printerId = searchParams.get("printer");
+    if (printerId) openCreate(printerId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -107,6 +117,12 @@ export function PartRequestsPage() {
         `/part-requests/${request.id}/${action}`,
       );
       setSelected(updated);
+      if (action === "receive" && updated.units_created > 0) {
+        setNotice(
+          `Получено: создано на складе ${updated.units_created} ед. запчастей.`,
+        );
+        parts.reload();
+      }
       requests.reload();
     } catch (err) {
       setListError(
@@ -143,7 +159,10 @@ export function PartRequestsPage() {
         subtitle="Заявки для конкретного принтера: черновик → отправлена → заказана → получена"
         actions={
           canEdit ? (
-            <button className="button button-primary" onClick={openCreate}>
+            <button
+              className="button button-primary"
+              onClick={() => openCreate()}
+            >
               + Новая заявка
             </button>
           ) : undefined
@@ -167,6 +186,7 @@ export function PartRequestsPage() {
         </select>
       </div>
 
+      {notice && <SuccessMessage message={notice} />}
       {listError && <ErrorMessage message={listError} />}
       {requests.loading && <Spinner />}
       {requests.error && <ErrorMessage message={requests.error} />}

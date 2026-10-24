@@ -587,4 +587,5 @@ export interface PartRequest {
   cancelled_at: string | null;
   created_at: string;
   lines: PartRequestLine[];
+  units_created: number;
 }

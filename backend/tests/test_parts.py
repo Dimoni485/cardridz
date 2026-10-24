@@ -208,6 +208,12 @@ def test_part_request_lifecycle(
         f"/api/part-requests/{request['id']}/receive", headers=auth
     )
     assert received.json()["status"] == "received"
+    assert received.json()["units_created"] == 5
+
+    units = client.get(f"/api/part-units?part_id={part['id']}", headers=auth).json()
+    assert len(units) == 5
+    assert all(unit["status"] == "in_stock" for unit in units)
+    assert {unit["purchase_date"] is not None for unit in units} == {True}
 
     cancel = client.post(f"/api/part-requests/{request['id']}/cancel", headers=auth)
     assert cancel.status_code == 409

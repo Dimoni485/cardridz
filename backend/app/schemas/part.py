@@ -158,3 +158,4 @@ class PartRequestRead(BaseModel):
     cancelled_at: datetime | None = None
     created_at: datetime
     lines: list[PartRequestLineRead] = []
+    units_created: int = 0

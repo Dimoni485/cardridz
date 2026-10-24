@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { api } from "../api/client";
 import type { Part, PartInstallation, Printer } from "../api/types";
 import { EmptyRow, ErrorMessage, PageHeader, Spinner } from "../components/ui";
@@ -10,7 +10,10 @@ export function PartReplacementsPage() {
   const [printerId, setPrinterId] = useState("");
   const [partId, setPartId] = useState("");
   const [openOnly, setOpenOnly] = useState(false);
-  const [needsReplacement, setNeedsReplacement] = useState(false);
+  const [searchParams] = useSearchParams();
+  const [needsReplacement, setNeedsReplacement] = useState(
+    searchParams.get("needs_replacement") === "true",
+  );
 
   const printers = useAsyncData(() => api.get<Printer[]>("/printers"), []);
   const parts = useAsyncData(() => api.get<Part[]>("/parts"), []);

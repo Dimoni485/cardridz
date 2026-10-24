@@ -5,6 +5,7 @@ import { useAuth } from "../auth";
 import type {
   Department,
   Employee,
+  PartUnit,
   Printer,
   PrinterModel,
   PrinterRepair,
@@ -122,6 +123,24 @@ export function PrintersPage() {
   const [historyTarget, setHistoryTarget] = useState<Printer | null>(null);
   const [history, setHistory] = useState<PrinterRepair[] | null>(null);
   const [historyError, setHistoryError] = useState<string | null>(null);
+
+  const [partsTarget, setPartsTarget] = useState<Printer | null>(null);
+  const [printerParts, setPrinterParts] = useState<PartUnit[] | null>(null);
+  const [partsError, setPartsError] = useState<string | null>(null);
+
+  function openParts(printer: Printer) {
+    setPartsTarget(printer);
+    setPrinterParts(null);
+    setPartsError(null);
+    api
+      .get<PartUnit[]>(`/part-units?printer_id=${printer.id}&status=installed`)
+      .then(setPrinterParts)
+      .catch((err: unknown) =>
+        setPartsError(
+          err instanceof Error ? err.message : "Не удалось загрузить запчасти",
+        ),
+      );
+  }
 
   function openCreate() {
     setEditing(null);
@@ -406,6 +425,12 @@ export function PrintersPage() {
                         onClick={() => openHistory(printer)}
                       >
                         История
+                      </button>
+                      <button
+                        className="button button-small"
+                        onClick={() => openParts(printer)}
+                      >
+                        Запчасти
                       </button>
                       {canEdit && (
                         <>
@@ -751,6 +776,61 @@ export function PrintersPage() {
               </button>
             </div>
           </form>
+        </Modal>
+      )}
+
+      {partsTarget && (
+        <Modal
+          title={`Запчасти на ${partsTarget.inventory_no}`}
+          onClose={() => setPartsTarget(null)}
+          wide
+        >
+          {partsError && <ErrorMessage message={partsError} />}
+          {!printerParts && !partsError && <Spinner label="Загрузка запчастей…" />}
+          {printerParts && printerParts.length === 0 && (
+            <p className="empty-text">На принтере нет установленных запчастей.</p>
+          )}
+          {printerParts && printerParts.length > 0 && (
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Запчасть</th>
+                  <th>Инв. №</th>
+                  <th>Установлена</th>
+                  <th>Требует замены</th>
+                </tr>
+              </thead>
+              <tbody>
+                {printerParts.map((unit) => (
+                  <tr key={unit.id}>
+                    <td>
+                      <Link to={`/parts/${unit.part.id}`}>{unit.part.name}</Link>
+                    </td>
+                    <td>{unit.inventory_no}</td>
+                    <td>{formatDateTime(unit.installed_at)}</td>
+                    <td>
+                      {unit.needs_replacement ? (
+                        <span className="badge badge-invoice-draft">да</span>
+                      ) : (
+                        "—"
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          <div className="form-actions">
+            <Link
+              className="button button-primary"
+              to={`/part-requests?printer=${partsTarget.id}`}
+            >
+              Заявка на закупку
+            </Link>
+            <button className="button" onClick={() => setPartsTarget(null)}>
+              Закрыть
+            </button>
+          </div>
         </Modal>
       )}
 

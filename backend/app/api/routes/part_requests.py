@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import select
@@ -6,7 +6,15 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.api.deps import get_current_user
 from app.db.session import get_db
-from app.models import Part, PartRequest, PartRequestLine, Printer, User
+from app.models import (
+    Part,
+    PartRequest,
+    PartRequestLine,
+    PartUnit,
+    Printer,
+    User,
+)
+from app.models.enums import PartUnitStatus
 from app.models.enums import PartRequestStatus
 from app.schemas.part import (
     PartRequestCreate,
@@ -176,15 +184,44 @@ def order_request(request_id: int, db: Session = Depends(get_db)) -> PartRequest
 
 
 @router.post("/{request_id}/receive", response_model=PartRequestRead)
-def receive_request(request_id: int, db: Session = Depends(get_db)) -> PartRequest:
+def receive_request(
+    request_id: int,
+    create_units: bool = True,
+    db: Session = Depends(get_db),
+) -> PartRequest:
     request = _get_request(db, request_id)
     if request.status != PartRequestStatus.ORDERED:
         raise HTTPException(
             status_code=409, detail="Получить можно только заказанную заявку"
         )
     _set_status(request, PartRequestStatus.RECEIVED)
+
+    created = 0
+    if create_units:
+        for line in request.lines:
+            for index in range(1, line.qty + 1):
+                inventory_no = f"{request.number}-{line.id}-{index}"
+                if db.scalar(
+                    select(PartUnit.id).where(
+                        PartUnit.inventory_no == inventory_no
+                    )
+                ):
+                    continue
+                db.add(
+                    PartUnit(
+                        inventory_no=inventory_no,
+                        part_id=line.part_id,
+                        status=PartUnitStatus.IN_STOCK,
+                        purchase_date=date.today(),
+                        notes=f"Получено по заявке {request.number}",
+                    )
+                )
+                created += 1
+
     db.commit()
-    return _get_request(db, request_id)
+    updated = _get_request(db, request_id)
+    updated.units_created = created
+    return updated
 
 
 @router.post("/{request_id}/cancel", response_model=PartRequestRead)
