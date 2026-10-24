@@ -48,7 +48,7 @@ export function DashboardPage() {
         <StatCard label="Всего картриджей" value={data.total_cartridges} tone="neutral" />
         <StatCard label="На складе" value={status.in_stock} tone="success" />
         <StatCard label="Выдано сотрудникам" value={status.issued} tone="info" />
-        <StatCard label="Установлено в принтеры" value={status.installed} tone="indigo" />
+        <StatCard label="В принтерах" value={status.installed} tone="indigo" />
         <StatCard
           label="На обслуживании"
           value={status.in_refill + status.in_restore}
