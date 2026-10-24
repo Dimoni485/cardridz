@@ -35,6 +35,7 @@ class CartridgeBrief(BaseModel):
 
     id: int
     inventory_no: str
+    status: CartridgeStatus
     model: CartridgeModelBrief
 
 

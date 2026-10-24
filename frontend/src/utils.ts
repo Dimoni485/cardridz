@@ -2,6 +2,8 @@ import type {
   CartridgeColor,
   CartridgeKind,
   CartridgeStatus,
+  InvoiceLineKind,
+  InvoiceStatus,
   OperationType,
   PrinterStatus,
   ServiceResult,
@@ -66,6 +68,17 @@ export const PRINTER_STATUS_LABELS: Record<PrinterStatus, string> = {
   retired: "Списан",
 };
 
+export const INVOICE_STATUS_LABELS: Record<InvoiceStatus, string> = {
+  draft: "Черновик",
+  applied: "Проведён",
+};
+
+export const INVOICE_LINE_KIND_LABELS: Record<InvoiceLineKind, string> = {
+  restore: "Восстановление",
+  refill: "Заправка",
+  repair: "Ремонт аппарата",
+};
+
 export const STATUS_ORDER: CartridgeStatus[] = [
   "in_stock",
   "issued",
@@ -126,6 +139,16 @@ export function formatMoney(value: number | null | undefined): string {
   }).format(value);
 }
 
+export function formatMoneyExact(value: number | null | undefined): string {
+  if (value === null || value === undefined) return "—";
+  return new Intl.NumberFormat("ru-RU", {
+    style: "currency",
+    currency: "RUB",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(value);
+}
+
 export function todayIso(): string {
   return localIsoDate(new Date());
 }
@@ -166,6 +189,12 @@ export function recentMonthOptions(
     });
   }
   return options;
+}
+
+export function orgName(raw: string): string {
+  const trimmed = raw.trim();
+  if (/^(ООО|ОАО|ЗАО|ПАО|АО|ИП)\b/i.test(trimmed)) return trimmed;
+  return `ООО «${trimmed}»`;
 }
 
 export function modelTitle(vendor: string, name: string): string {

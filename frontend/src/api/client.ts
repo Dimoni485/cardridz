@@ -105,6 +105,46 @@ export async function downloadFile(
   URL.revokeObjectURL(url);
 }
 
+export async function uploadFile<T>(path: string, file: File): Promise<T> {
+  const token = getToken();
+  const headers = new Headers();
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+  const body = new FormData();
+  body.append("file", file);
+
+  const response = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers,
+    body,
+  });
+
+  if (response.status === 401) {
+    setToken(null);
+    window.dispatchEvent(new Event("cardridz:unauthorized"));
+  }
+
+  if (!response.ok) {
+    let message = `Ошибка ${response.status}`;
+    try {
+      const data = await response.json();
+      if (typeof data.detail === "string") {
+        message = data.detail;
+      } else if (Array.isArray(data.detail)) {
+        message = data.detail
+          .map((item: { msg?: string }) => item.msg ?? "Ошибка валидации")
+          .join("; ");
+      }
+    } catch {
+      // keep default message
+    }
+    throw new ApiError(message, response.status);
+  }
+
+  return (await response.json()) as T;
+}
+
 export const api = {
   get: <T>(path: string) => request<T>(path),
   post: <T>(path: string, body?: unknown) =>
@@ -115,5 +155,6 @@ export const api = {
   patch: <T>(path: string, body: unknown) =>
     request<T>(path, { method: "PATCH", body: JSON.stringify(body) }),
   delete: (path: string) => request<void>(path, { method: "DELETE" }),
+  upload: uploadFile,
   download: downloadFile,
 };

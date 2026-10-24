@@ -10,3 +10,6 @@ frontend/node_modules/
 frontend/dist/
 *.log
 .DS_Store
+
+# Сканы/счета контрагентов не храним в репозитории
+scet/

@@ -31,6 +31,9 @@ export type ServiceResult =
 
 export type PrinterRepairStatus = "in_service" | "returned";
 
+export type InvoiceStatus = "draft" | "applied";
+export type InvoiceLineKind = "restore" | "refill" | "repair";
+
 export type UserRole = "admin" | "editor" | "viewer";
 
 export interface User {
@@ -254,6 +257,91 @@ export interface Page<T> {
   total: number;
   skip: number;
   limit: number;
+}
+
+export interface CartridgeBrief {
+  id: number;
+  inventory_no: string;
+  status: CartridgeStatus;
+  model: CartridgeModelBrief;
+}
+
+export interface InvoiceLine {
+  id: number;
+  number: number;
+  title: string;
+  kind: InvoiceLineKind;
+  target_raw: string;
+  qty: number;
+  price: number;
+  total: number;
+  cartridge_model: CartridgeModelBrief | null;
+  printer: PrinterBrief | null;
+  department: DepartmentBrief | null;
+  slots: InvoiceLineSlot[];
+  skipped: boolean;
+  applied: boolean;
+  applied_note: string | null;
+}
+
+export interface InvoiceLineSlot {
+  id: number;
+  position: number;
+  cartridge: CartridgeBrief | null;
+  department: DepartmentBrief | null;
+  applied: boolean;
+}
+
+export interface Invoice {
+  id: number;
+  number: string;
+  issued_at: string;
+  supplier_name: string;
+  supplier_inn: string | null;
+  service_provider: ServiceProviderBrief | null;
+  buyer_name: string;
+  buyer_inn: string | null;
+  legal_entity: LegalEntityBrief | null;
+  department: DepartmentBrief | null;
+  holder_employee: EmployeeBrief | null;
+  total: number;
+  vat: number;
+  vat_rate: number;
+  cost_with_vat: boolean;
+  file_name: string;
+  status: InvoiceStatus;
+  sent_offset_days: number;
+  comment: string | null;
+  applied_at: string | null;
+  created_at: string;
+  lines: InvoiceLine[];
+  matched_lines: number;
+  applied_lines: number;
+  skipped_lines: number;
+}
+
+export interface InvoiceListItem {
+  id: number;
+  number: string;
+  issued_at: string;
+  supplier_name: string;
+  buyer_name: string;
+  total: number;
+  status: InvoiceStatus;
+  applied_at: string | null;
+  created_at: string;
+  lines_total: number;
+  lines_matched: number;
+  lines_applied: number;
+}
+
+export interface InvoiceApplyResult {
+  operations_created: number;
+  repairs_created: number;
+  cartridges_created: number;
+  applied_lines: number;
+  skipped_lines: number;
+  posted_cost: number;
 }
 
 export interface SummaryStats {

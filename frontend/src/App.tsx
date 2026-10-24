@@ -8,6 +8,8 @@ import { DashboardPage } from "./pages/DashboardPage";
 import { EmployeesPage } from "./pages/EmployeesPage";
 import { EntitiesPage } from "./pages/EntitiesPage";
 import { HelpPage } from "./pages/HelpPage";
+import { InvoiceDetailPage } from "./pages/InvoiceDetailPage";
+import { InvoicesPage } from "./pages/InvoicesPage";
 import { LoginPage } from "./pages/LoginPage";
 import { ModelsPage } from "./pages/ModelsPage";
 import { OperationsPage } from "./pages/OperationsPage";
@@ -39,6 +41,8 @@ export function App() {
         <Route path="cartridges" element={<CartridgesPage />} />
         <Route path="cartridges/:id" element={<CartridgeDetailPage />} />
         <Route path="operations" element={<OperationsPage />} />
+        <Route path="invoices" element={<InvoicesPage />} />
+        <Route path="invoices/:id" element={<InvoiceDetailPage />} />
         <Route path="printers" element={<PrintersPage />} />
         <Route path="models" element={<ModelsPage />} />
         <Route path="printer-models" element={<PrinterModelsPage />} />

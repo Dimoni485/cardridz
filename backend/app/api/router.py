@@ -7,6 +7,7 @@ from app.api.routes import (
     cartridges,
     departments,
     employees,
+    invoices,
     legal_entities,
     operations,
     printer_models,
@@ -28,6 +29,7 @@ protected_router.include_router(cartridge_models.router)
 protected_router.include_router(printers.router)
 protected_router.include_router(service_providers.router)
 protected_router.include_router(cartridges.router)
+protected_router.include_router(invoices.router)
 protected_router.include_router(operations.router)
 protected_router.include_router(reports.router)
 protected_router.include_router(users.router)

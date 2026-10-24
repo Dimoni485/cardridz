@@ -1,7 +1,8 @@
 import os
 
-os.environ["DATABASE_URL"] = (
-    "postgresql+psycopg2://postgres@127.0.0.1:5433/cardridz_test"
+os.environ["DATABASE_URL"] = os.environ.get(
+    "TEST_DATABASE_URL",
+    "postgresql+psycopg2://postgres@127.0.0.1:5433/cardridz_test",
 )
 os.environ["JWT_SECRET"] = "test-secret"
 os.environ["ADMIN_USERNAME"] = "testadmin"
@@ -32,7 +33,8 @@ def _clean_db():
     with engine.begin() as conn:
         conn.execute(
             text(
-                "TRUNCATE TABLE operations, cartridges, printer_repairs, printers, "
+                "TRUNCATE TABLE invoice_lines, invoices, operations, cartridges, "
+                "printer_repairs, printers, "
                 "cartridge_model_printer_model, cartridge_models, "
                 "printer_models, employees, departments, legal_entities, "
                 "service_providers RESTART IDENTITY CASCADE"

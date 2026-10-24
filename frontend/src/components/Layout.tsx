@@ -13,31 +13,74 @@ interface NavItem {
   adminOnly?: boolean;
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { to: "/", label: "Панель", icon: "◫", end: true },
-  { to: "/cartridges", label: "Картриджи", icon: "▤" },
-  { to: "/operations", label: "Журнал операций", icon: "⇄" },
-  { to: "/printers", label: "Принтеры", icon: "⎙" },
-  { to: "/models", label: "Модели картриджей", icon: "◈" },
-  { to: "/printer-models", label: "Модели принтеров", icon: "▦" },
-  { to: "/employees", label: "Сотрудники", icon: "◎" },
-  { to: "/entities", label: "Юрлица и отделы", icon: "⌂" },
-  { to: "/service-providers", label: "Сервисные организации", icon: "⛭" },
-  { to: "/reports", label: "Отчёты", icon: "▥" },
-  { to: "/users", label: "Пользователи", icon: "☗", adminOnly: true },
-  { to: "/help", label: "Помощь", icon: "?" },
+interface NavGroup {
+  key?: string;
+  title?: string;
+  to?: string;
+  end?: boolean;
+  items: NavItem[];
+}
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    items: [
+      { to: "/", label: "Панель", icon: "◫", end: true },
+      { to: "/cartridges", label: "Картриджи", icon: "▤" },
+      { to: "/operations", label: "Журнал операций", icon: "⇄" },
+      { to: "/invoices", label: "Счета", icon: "▣" },
+      { to: "/printers", label: "Принтеры", icon: "⎙" },
+    ],
+  },
+  {
+    key: "refs",
+    title: "Справочники",
+    items: [
+      { to: "/models", label: "Модели картриджей", icon: "◈" },
+      { to: "/printer-models", label: "Модели принтеров", icon: "▦" },
+      { to: "/employees", label: "Сотрудники", icon: "◎" },
+      { to: "/entities", label: "Юрлица и отделы", icon: "⌂" },
+      { to: "/service-providers", label: "Сервисные организации", icon: "⛭" },
+    ],
+  },
+  {
+    key: "reports",
+    title: "Отчёты",
+    to: "/reports",
+    items: [],
+  },
+  {
+    key: "service",
+    title: "Сервис",
+    items: [
+      { to: "/users", label: "Пользователи", icon: "☗", adminOnly: true },
+      { to: "/help", label: "Помощь", icon: "?" },
+    ],
+  },
 ];
 
 export function Layout() {
   const { user, logout, canEdit, isAdmin } = useAuth();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [refsOpen, setRefsOpen] = useState(
+    () => window.localStorage.getItem("cardridz_nav_refs") !== "closed",
+  );
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState<string | null>(null);
   const [passwordDone, setPasswordDone] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  function toggleRefs() {
+    setRefsOpen((open) => {
+      window.localStorage.setItem(
+        "cardridz_nav_refs",
+        open ? "closed" : "open",
+      );
+      return !open;
+    });
+  }
 
   function openPassword() {
     setCurrentPassword("");
@@ -80,17 +123,68 @@ export function Layout() {
           </div>
         </div>
         <nav className="nav">
-          {NAV_ITEMS.filter((item) => !item.adminOnly || isAdmin).map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.end}
-              className={({ isActive }) => (isActive ? "nav-link active" : "nav-link")}
-            >
-              <span className="nav-icon">{item.icon}</span>
-              {item.label}
-            </NavLink>
-          ))}
+          {NAV_GROUPS.map((group) => {
+            if (group.to) {
+              return (
+                <div className="nav-group" key={group.key ?? group.to}>
+                  <NavLink
+                    to={group.to}
+                    end={group.end}
+                    className={({ isActive }) =>
+                      `nav-group-title nav-group-link${isActive ? " active" : ""}`
+                    }
+                  >
+                    <span>{group.title}</span>
+                    <span className="nav-caret">›</span>
+                  </NavLink>
+                </div>
+              );
+            }
+            const items = group.items.filter(
+              (item) => !item.adminOnly || isAdmin,
+            );
+            if (items.length === 0) return null;
+            const collapsed =
+              group.key === "refs" ? !refsOpen : false;
+            return (
+              <div className="nav-group" key={group.key ?? items[0].to}>
+                {group.title &&
+                  (group.key === "refs" ? (
+                    <button
+                      type="button"
+                      className="nav-group-title"
+                      onClick={toggleRefs}
+                      aria-expanded={refsOpen}
+                    >
+                      <span>{group.title}</span>
+                      <span className="nav-caret">{refsOpen ? "▾" : "▸"}</span>
+                    </button>
+                  ) : (
+                    <div className="nav-group-title">{group.title}</div>
+                  ))}
+                {!collapsed &&
+                  items.map((item) => (
+                    <NavLink
+                      key={item.to}
+                      to={item.to}
+                      end={item.end}
+                      className={({ isActive }) =>
+                        [
+                          "nav-link",
+                          group.key ? "nav-sub" : "",
+                          isActive ? "active" : "",
+                        ]
+                          .filter(Boolean)
+                          .join(" ")
+                      }
+                    >
+                      <span className="nav-icon">{item.icon}</span>
+                      {item.label}
+                    </NavLink>
+                  ))}
+              </div>
+            );
+          })}
         </nav>
         <div className="sidebar-footer">
           <div className="user-chip">

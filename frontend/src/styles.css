@@ -1560,3 +1560,192 @@ a {
     grid-template-columns: 120px 1fr 30px;
   }
 }
+
+.badge-invoice-draft {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-invoice-applied {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.row-muted {
+  opacity: 0.55;
+}
+
+.invoice-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 13px;
+  color: #334155;
+}
+
+.cartridge-picker {
+  margin-top: 6px;
+}
+
+.cartridge-picker .checkbox-list {
+  max-height: 140px;
+  overflow-y: auto;
+}
+
+.cartridge-picker .muted {
+  margin-top: 4px;
+}
+
+.invoice-lines .table {
+  table-layout: fixed;
+  min-width: 680px;
+}
+
+.invoice-lines .table th:nth-child(1),
+.invoice-lines .table td:nth-child(1) {
+  width: 44px;
+}
+
+.invoice-lines .table th:nth-child(3),
+.invoice-lines .table td:nth-child(3) {
+  width: 100px;
+  white-space: nowrap;
+}
+
+.invoice-lines .table th:nth-child(4),
+.invoice-lines .table td:nth-child(4) {
+  width: 292px;
+}
+
+.invoice-lines .table th:nth-child(5),
+.invoice-lines .table td:nth-child(5) {
+  width: 56px;
+  text-align: center;
+}
+
+.invoice-lines select {
+  width: 100%;
+  min-width: 0;
+}
+
+.invoice-list .table th,
+.invoice-list .table td {
+  white-space: nowrap;
+}
+
+.cartridge-picker .checkbox-item .badge {
+  margin-left: 6px;
+  padding: 1px 7px;
+  font-size: 10.5px;
+}
+
+.line-department {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.line-department .input {
+  flex: 1;
+  min-width: 0;
+}
+
+.slot-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.slot-row {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: 6px;
+  align-items: center;
+}
+
+.slot-index {
+  font-size: 11.5px;
+  color: #64748b;
+  text-align: right;
+}
+
+.slot-row select {
+  font-size: 12.5px;
+  padding: 6px 8px;
+}
+
+.slot-cartridge {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.slot-error {
+  font-size: 11px;
+  color: #b91c1c;
+  margin-top: 2px;
+}
+
+.nav-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-group + .nav-group {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
+}
+
+.nav-group-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 2px 12px 4px;
+  border: none;
+  background: none;
+  color: #94a3b8;
+  font-family: inherit;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.nav-group-title:hover {
+  color: #e2e8f0;
+}
+
+.nav-caret {
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+.nav-link.nav-sub {
+  padding-left: 20px;
+  font-size: 13px;
+}
+
+.nav-group-link {
+  text-decoration: none;
+}
+
+.nav-group-link:hover {
+  color: #e2e8f0;
+}
+
+.nav-group-link.active {
+  color: #93c5fd;
+}

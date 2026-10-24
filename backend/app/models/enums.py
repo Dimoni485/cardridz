@@ -49,6 +49,17 @@ class PrinterRepairStatus(str, Enum):
     RETURNED = "returned"
 
 
+class InvoiceStatus(str, Enum):
+    DRAFT = "draft"
+    APPLIED = "applied"
+
+
+class InvoiceLineKind(str, Enum):
+    RESTORE = "restore"
+    REFILL = "refill"
+    REPAIR = "repair"
+
+
 class OperationType(str, Enum):
     RECEIPT = "receipt"
     ISSUE = "issue"

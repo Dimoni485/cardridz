@@ -1,6 +1,7 @@
 from app.models.cartridge import Cartridge, Operation
 from app.models.catalog import CartridgeModel, PrinterModel, cartridge_model_printer_model
 from app.models.employee import Employee
+from app.models.invoice import Invoice, InvoiceLine, InvoiceLineSlot
 from app.models.legal_entity import Department, LegalEntity
 from app.models.printer import Printer
 from app.models.printer_repair import PrinterRepair
@@ -12,6 +13,9 @@ __all__ = [
     "CartridgeModel",
     "Department",
     "Employee",
+    "Invoice",
+    "InvoiceLine",
+    "InvoiceLineSlot",
     "LegalEntity",
     "Operation",
     "Printer",
