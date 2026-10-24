@@ -1,6 +1,6 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -44,6 +44,17 @@ if DIST_DIR.exists():
     app.mount(
         "/assets", StaticFiles(directory=DIST_DIR / "assets"), name="assets"
     )
+
+    @app.middleware("http")
+    async def cache_headers(request: Request, call_next):
+        response = await call_next(request)
+        # Файлы в /assets содержат хеш в имени, поэтому кешируются навсегда;
+        # index.html перепроверяем, иначе после обновления он тянет удалённый CSS.
+        if request.url.path.startswith("/assets/"):
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        elif response.headers.get("content-type", "").startswith("text/html"):
+            response.headers["Cache-Control"] = "no-cache"
+        return response
 
     @app.get("/{full_path:path}", include_in_schema=False)
     def spa_fallback(full_path: str) -> FileResponse:

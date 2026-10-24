@@ -106,7 +106,7 @@ export function OperationsPage() {
                 {operations.data.items.map((operation) => (
                   <tr key={operation.id}>
                     <td className="nowrap">{formatDateTime(operation.occurred_at)}</td>
-                    <td className="nowrap">
+                    <td>
                       {OPERATION_LABELS[operation.type]}
                       {operation.service_provider && (
                         <div className="muted small">

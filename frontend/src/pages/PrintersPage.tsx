@@ -335,7 +335,7 @@ export function PrintersPage() {
 
       {printers.data && !printers.loading && (
         <div className="card table-card">
-          <table className="table table-compact">
+          <table className="table table-compact printers-table">
             <thead>
               <tr>
                 <th>Инв. номер</th>
@@ -403,51 +403,53 @@ export function PrintersPage() {
                         "—"
                       )}
                     </td>
-                    <td className="right nowrap">
-                      {canEdit && printer.status === "active" && (
-                        <button
-                          className="button button-small"
-                          onClick={() => openSend(printer)}
-                        >
-                          В ремонт
-                        </button>
-                      )}
-                      {canEdit && printer.status === "repair" && (
-                        <button
-                          className="button button-small"
-                          onClick={() => openReturn(printer)}
-                        >
-                          Возврат
-                        </button>
-                      )}
-                      <button
-                        className="button button-small"
-                        onClick={() => openHistory(printer)}
-                      >
-                        История
-                      </button>
-                      <button
-                        className="button button-small"
-                        onClick={() => openParts(printer)}
-                      >
-                        Запчасти
-                      </button>
-                      {canEdit && (
-                        <>
+                    <td className="right">
+                      <div className="row-actions">
+                        {canEdit && printer.status === "active" && (
                           <button
                             className="button button-small"
-                            onClick={() => openEdit(printer)}
+                            onClick={() => openSend(printer)}
                           >
-                            Изменить
+                            В ремонт
                           </button>
+                        )}
+                        {canEdit && printer.status === "repair" && (
                           <button
-                            className="button button-small button-danger-ghost"
-                            onClick={() => handleDelete(printer)}
+                            className="button button-small"
+                            onClick={() => openReturn(printer)}
                           >
-                            Удалить
+                            Возврат
                           </button>
-                        </>
-                      )}
+                        )}
+                        <button
+                          className="button button-small"
+                          onClick={() => openHistory(printer)}
+                        >
+                          История
+                        </button>
+                        <button
+                          className="button button-small"
+                          onClick={() => openParts(printer)}
+                        >
+                          Запчасти
+                        </button>
+                        {canEdit && (
+                          <>
+                            <button
+                              className="button button-small"
+                              onClick={() => openEdit(printer)}
+                            >
+                              Изменить
+                            </button>
+                            <button
+                              className="button button-small button-danger-ghost"
+                              onClick={() => handleDelete(printer)}
+                            >
+                              Удалить
+                            </button>
+                          </>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );

@@ -621,6 +621,21 @@ a {
 .table-card {
   padding: 0;
   overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.table-card::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-card::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
 }
 
 .table {
@@ -967,7 +982,7 @@ a {
 
 .stat-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
   gap: 12px;
   margin-bottom: 14px;
 }
@@ -981,6 +996,7 @@ a {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 2px;
   padding: 15px 17px;
   background: var(--surface);
@@ -1256,19 +1272,30 @@ a {
 
 .report-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 28px;
 }
 
 .usage-tables {
   display: grid;
-  grid-template-columns: 1.7fr 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 26px;
   margin-top: 4px;
 }
 
-.service-tables {
-  grid-template-columns: 1fr 1fr;
+.usage-tables > div {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+@media (min-width: 1480px) {
+  .usage-tables {
+    grid-template-columns: minmax(0, 1.9fr) minmax(0, 1fr);
+  }
+
+  .service-tables {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
 }
 
 .section-gap {
@@ -1313,7 +1340,7 @@ a {
 
 .bar-row {
   display: grid;
-  grid-template-columns: 175px 1fr 34px;
+  grid-template-columns: 205px 1fr 34px;
   align-items: center;
   gap: 10px;
   font-size: 12.5px;
@@ -1372,7 +1399,7 @@ a {
 }
 
 .chart-label {
-  font-size: 9px;
+  font-size: 10.5px;
   color: var(--text-soft);
 }
 
@@ -1648,7 +1675,7 @@ a {
 
 .invoice-lines .table th:nth-child(4),
 .invoice-lines .table td:nth-child(4) {
-  width: 292px;
+  width: 42%;
 }
 
 .invoice-lines .table th:nth-child(5),
@@ -1675,9 +1702,10 @@ a {
 
 .line-department {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 8px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  margin-top: 10px;
 }
 
 .line-department .input {
@@ -1694,9 +1722,13 @@ a {
 
 .slot-row {
   display: grid;
-  grid-template-columns: 16px minmax(0, 1.15fr) minmax(0, 1fr);
-  gap: 6px;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 4px 6px;
   align-items: center;
+}
+
+.slot-row > .slot-department {
+  grid-column: 2;
 }
 
 .slot-index {
@@ -1821,4 +1853,20 @@ a {
 .badge-request-cancelled {
   background: #fee2e2;
   color: #991b1b;
+}
+
+.row-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+/* Действия в широкой таблице принтеров остаются на виду при прокрутке */
+.printers-table th:last-child,
+.printers-table td:last-child {
+  position: sticky;
+  right: 0;
+  background: var(--surface);
+  box-shadow: -10px 0 14px -12px rgba(15, 23, 42, 0.45);
 }
